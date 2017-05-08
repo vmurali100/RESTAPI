@@ -1,12 +1,21 @@
 <html>
 <head>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+	<link rel="stylesheet" href="js/lib/ladda/dist/ladda-themeless.min.css">
+
 	<style>
 		.navbar-fixed-bottom, .navbar-fixed-top {
 			position: relative; 
 			right: 0;
 			left: 0;
 			z-index: 1030;
+		}
+		.spinner{
+			position: relative; 
+			width: 50px;
+			height: 50px;
+			margin: 0 auto;
+			padding: 40px 0;
 		}
 
 	</style>
@@ -22,8 +31,11 @@
 	</div >
 </nav >
 <div class="container">
+
 	<div class="row">
-			<form action="" class="form-inline well well-sm">
+
+		<div class="col-md-8" ng-controller="contactsListController">
+			<form class="form-inline well well-sm">
 				<span class="glyphicon glyphicon-search" ></span >
 
 					<div class="form-group" >
@@ -34,64 +46,75 @@
 						placeholder="Search name..."
 						/>
 					</div >
+					<button class="btn btn-primary pull-right">Create</button>
 				</form>
-		<div class="row">
-			<div class="col-md-8" ng-controller="contactsListController">
-				
-					<table class="table table-striped">
-						<tr>
-							<th>Sl</th>
-							<th>Name</th>
-							<th>Email</th>
-							<th>Address</th>
-							
-						</tr>
-						<tr ng-repeat="person in contacts.persons" ng-click="contacts.selectedPerson=person">
-							<td>{{$index+1}}</td>
-							<td>{{person.name}}</td>
-							<td>{{person.email}}</td>
-							<td>{{person.address}}</td>
-							
-						</tr>
-					</table>
+				<table class="table table-striped" infinite-scroll="loadMore()" infinite-scroll-distance="1">
+					<tr>
+						<th>Sl</th>
+						<th>Name</th>
+						<th>Email</th>
+						<th>Address</th>
+
+					</tr>
+					<tr ng-repeat="person in contacts.persons" ng-click="contacts.selectedPerson=person">
+						<td>{{$index+1}}</td>
+						<td>{{person.name}}</td>
+						<td>{{person.email}}</td>
+						<td>{{person.address}}</td>
+
+					</tr>
+				</table>
+				<div ng-show="contacts.isLoading" class="spinner">
+					<span us-spinner="{radius:10, width:8, length: 8}"></span>
+					<p>Loading.....</p>
 				</div>
+			</div>
 			
 			<div class="col-md-4" ng-controller="contactsDetailController">
 
-			<div class="panel panel-default" >
-				<div class="panel-heading" >Details</div >
-				<div class="panel-body" >
+				<div class="panel panel-default" >
+					<div class="panel-heading" >Details
 
-					<dl >
-						<dt >Name</dt >
-						<dd >{{contacts.selectedPerson.name}}</dd >
-						<dt >Email</dt >
-						<dd >{{contacts.selectedPerson.email}}</dd >
-						<dt >Birthday</dt >
-						<dd >{{contacts.selectedPerson.birthdate | date:"longDate"}}</dd >
-						<dt >Phonenumber</dt >
-						<dd >{{contacts.selectedPerson.phonenumber}}</dd >
-						<dt >Address</dt >
-						<dd >{{contacts.selectedPerson.address}}</dd >
-						<dt >City</dt >
-						<dd >{{contacts.selectedPerson.city}}</dd >
-						<dt >Country</dt >
-						<dd >{{contacts.selectedPerson.country}}</dd >
-					</dl >
+						<button class="btn btn-danger btn-sm pull-right"
+						ladda="contacts.isDeleting"
+						ng-click="remove()" >Delete
+					</button >
+					<div class="clearfix" ></div >
 
+					</div >
+					<div class="panel-body" >
+
+						<form class="form-horizontal" ng-submit="save()" novalidate="novalidate">
+							<ng-include src="'templates/form.html'" ></ng-include>
+						</form>
+
+					</div >
 				</div >
-			</div >
 
-		</div >
-	</div>
+			</div >
 		</div>
+
 	</div>
+	<script type='text/javascript' src='js/lib/jquery-3.2.1.js'></script>
+
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/angular-resource/1.6.4/angular-resource.js"></script>
 	<script src="js/app.js"></script>
 	<script src="js/contactsListController.js"></script>
 	<script src="js/contactService.js"></script>
 	<script src="js/contactsDetailController.js"></script>
 
-	
+	<script type='text/javascript' src='js/lib/ng-infinite-scroll.js'></script>
+	<script type='text/javascript' src='js/lib/spin/spin.js'></script>
+	<script type='text/javascript' src='js/lib/angular-spinner/angular-spinner.js'></script>
+	<script type='text/javascript' src='js/lib/angular-auto-validate/dist/jcs-auto-validate.min.js'></script>
+	<script type='text/javascript' src='js/lib/ladda/dist/ladda.min.js'></script>
+	<script type='text/javascript' src='js/lib/angular-ladda/dist/angular-ladda.min.js'></script>
+	<script type='text/javascript' src='js/lib/angular-strap/dist/angular-strap.min.js'></script>
+	<script type='text/javascript' src='js/lib/angular-strap/dist/angular-strap.tpl.min.js'></script>
+
+
+
+
 </body>
 </html>
